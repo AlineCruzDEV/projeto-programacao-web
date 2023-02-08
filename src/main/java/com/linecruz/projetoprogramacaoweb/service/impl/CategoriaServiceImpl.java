@@ -6,7 +6,6 @@ import com.linecruz.projetoprogramacaoweb.model.mapper.CategoriaMapper;
 import com.linecruz.projetoprogramacaoweb.repository.CategoriaRepository;
 import com.linecruz.projetoprogramacaoweb.service.CategoriaService;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,11 +14,12 @@ import java.util.Optional;
 @Service
 public class CategoriaServiceImpl implements CategoriaService {
 
-    @Autowired
-    private CategoriaRepository repository;
-
-    @Autowired
-    private CategoriaMapper mapper;
+    private final CategoriaRepository repository;
+    private final CategoriaMapper mapper;
+    public CategoriaServiceImpl(CategoriaRepository repository, CategoriaMapper mapper) {
+        this.repository = repository;
+        this.mapper = mapper;
+    }
 
     @Override
     public List<CategoriaDTO> findAll() {
@@ -29,7 +29,7 @@ public class CategoriaServiceImpl implements CategoriaService {
     @Override
     public CategoriaDTO findById(Long id) {
         Optional<Categoria> categoriaProdutoOp = repository.findById(id);
-        if(categoriaProdutoOp.isPresent()) {
+        if (categoriaProdutoOp.isPresent()) {
             Categoria categoria = categoriaProdutoOp.get();
             return mapper.parseDTO(categoria);
         }
@@ -47,7 +47,7 @@ public class CategoriaServiceImpl implements CategoriaService {
 
     @Override
     public CategoriaDTO edit(Long id, CategoriaDTO entity) {
-        if(repository.existsById(id)) {
+        if (repository.existsById(id)) {
             Categoria categoria = mapper.parseEntity(entity);
             categoria.setId(id);
             categoria = repository.save(categoria);
@@ -59,7 +59,7 @@ public class CategoriaServiceImpl implements CategoriaService {
 
     @Override
     public void delete(Long id) {
-        if(!repository.existsById(id)) {
+        if (!repository.existsById(id)) {
             throw new EntityNotFoundException();
         }
 
