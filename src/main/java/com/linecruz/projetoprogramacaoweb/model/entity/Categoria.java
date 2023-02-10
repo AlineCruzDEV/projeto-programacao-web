@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class Categoria {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
