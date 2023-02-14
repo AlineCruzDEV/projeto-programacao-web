@@ -22,7 +22,13 @@ public abstract class BaseController<T, S extends BaseService<T>> {
 
     @GetMapping
     public ResponseEntity<List<T>> findAll() {
-        return ResponseEntity.ok(service.findAll());
+        List<T> result = service.findAll();
+        if(result.size() == 0) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(result);
+        } else {
+            return ResponseEntity.ok(result);
+        }
+
     }
 
     @GetMapping("/{id}")

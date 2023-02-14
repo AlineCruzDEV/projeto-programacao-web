@@ -1,7 +1,6 @@
 package com.linecruz.projetoprogramacaoweb.repository;
 
 import com.linecruz.projetoprogramacaoweb.model.entity.Livro;
-import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -11,8 +10,6 @@ import jakarta.persistence.criteria.Root;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.stereotype.Repository;
-//import com.querydsl.core.types.Predicate;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,24 +28,23 @@ public class LivroFilterRepository extends QuerydslRepositorySupport {
 //    }
 
     @Transactional
-    public List<Livro> filter(Livro filter){
+    public List<Livro> filter(Livro filter) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Livro> cq =  cb.createQuery(Livro.class);
+        CriteriaQuery<Livro> cq = cb.createQuery(Livro.class);
         Root<Livro> root = cq.from(Livro.class);
         List<Predicate> predicates = new ArrayList<>();
 
-        if(filter.getNome()!=null) {
-            predicates.add((Predicate) cb.like(cb.upper(root.get("nome")), "%"+filter.getNome().toUpperCase()+"%"));
+        if (filter.getNome() != null) {
+            predicates.add(cb.like(cb.upper(root.get("nome")), "%" + filter.getNome().toUpperCase() + "%"));
         }
 
-        if(filter.getIsbn()!=null) {
-            predicates.add((Predicate) cb.like(cb.upper(root.get("isbn")), "%"+filter.getIsbn().toUpperCase()+"%" ));
+        if (filter.getIsbn() != null) {
+            predicates.add(cb.like(cb.upper(root.get("isbn")), "%" + filter.getIsbn().toUpperCase() + "%"));
         }
 
-        cq.where(cb.and((Predicate[]) predicates.toArray(new Predicate[predicates.size()])));
+        cq.where(cb.and(predicates.toArray(new Predicate[0])));
 
-        List<Livro> livros = em.createQuery(cq).getResultList();
-        return livros;
+        return em.createQuery(cq).getResultList();
     }
 
 //    public List<Livro> filter(Livro filter) {
