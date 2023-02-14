@@ -12,9 +12,12 @@
     <artifactId>projeto-programacao-web</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>projeto-programacao-web</name>
-    <description>projeto-programacao-web</description>
+    <description>Projeto do módulo Programação Web II</description>
     <properties>
         <java.version>17</java.version>
+        <maven.compiler.release>17</maven.compiler.release>
+        <org.mapstruct.version>1.5.3.Final</org.mapstruct.version>
+        <m2e.apt.activation>jdt_apt</m2e.apt.activation>
     </properties>
     <dependencies>
         <dependency>
@@ -51,7 +54,28 @@
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
-            <version>1.5.3.Final</version>
+            <version>${org.mapstruct.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.querydsl</groupId>
+            <artifactId>querydsl-apt</artifactId>
+            <version>${querydsl.version}</version>
+            <classifier>jakarta</classifier>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.querydsl</groupId>
+            <artifactId>querydsl-jpa</artifactId>
+            <classifier>jakarta</classifier>
+            <version>${querydsl.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.persistence</groupId>
+            <artifactId>javax.persistence-api</artifactId>
+            <version>2.2</version>
         </dependency>
     </dependencies>
 
@@ -63,30 +87,61 @@
                 <configuration>
                     <source>17</source>
                     <target>17</target>
+                    <encoding>UTF-8</encoding>
+                    <annotationProcessors>
+                        <annotationProcessor>lombok.launch.AnnotationProcessorHider$AnnotationProcessor</annotationProcessor>
+                        <annotationProcessor>com.querydsl.apt.jpa.JPAAnnotationProcessor</annotationProcessor>
+                        <annotationProcessor>org.mapstruct.ap.MappingProcessor</annotationProcessor>
+                    </annotationProcessors>
                     <annotationProcessorPaths>
+                        <path>
+                            <groupId>com.querydsl</groupId>
+                            <artifactId>querydsl-apt</artifactId>
+                            <version>${querydsl.version}</version>
+                        </path>
                         <path>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
-                            <version>1.18.24</version>
+                            <version>${lombok.version}</version>
                         </path>
                         <path>
                             <groupId>org.mapstruct</groupId>
                             <artifactId>mapstruct-processor</artifactId>
-                            <version>1.5.3.Final</version>
+                            <version>${org.mapstruct.version}</version>
+                        </path>
+                        <path>
+                            <groupId>javax.annotation</groupId>
+                            <artifactId>javax.annotation-api</artifactId>
+                            <version>1.3.1</version>
+                        </path>
+                        <path>
+                            <groupId>org.eclipse.persistence</groupId>
+                            <artifactId>javax.persistence</artifactId>
+                            <version>2.0.0</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
+                <groupId>com.mysema.maven</groupId>
+                <artifactId>apt-maven-plugin</artifactId>
+                <version>1.1.3</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>process</goal>
+                        </goals>
+                        <configuration>
+                            <includes>
+                                <include>common.persistence.entity.**</include>
+                                <include>com.linecruz.projetoprogramacaoweb.model.entity.**</include>
+                            </includes>
+                        </configuration>
+                    </execution>
+                </executions>
                 <configuration>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
+                    <outputDirectory>target/generated-sources/java</outputDirectory>
+                    <processor>com.querydsl.apt.jpa.JPAAnnotationProcessor</processor>
                 </configuration>
             </plugin>
         </plugins>

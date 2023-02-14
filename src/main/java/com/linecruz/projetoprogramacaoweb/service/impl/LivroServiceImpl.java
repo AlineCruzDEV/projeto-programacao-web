@@ -3,6 +3,7 @@ package com.linecruz.projetoprogramacaoweb.service.impl;
 import com.linecruz.projetoprogramacaoweb.model.dto.LivroDTO;
 import com.linecruz.projetoprogramacaoweb.model.entity.Livro;
 import com.linecruz.projetoprogramacaoweb.model.mapper.LivroMapper;
+import com.linecruz.projetoprogramacaoweb.repository.LivroFilterRepository;
 import com.linecruz.projetoprogramacaoweb.repository.LivroRepository;
 import com.linecruz.projetoprogramacaoweb.service.LivroService;
 import jakarta.persistence.EntityNotFoundException;
@@ -16,10 +17,12 @@ public class LivroServiceImpl implements LivroService {
 
     private final LivroRepository repository;
     private final LivroMapper mapper;
+    private final LivroFilterRepository filterRepository;
 
-    public LivroServiceImpl(LivroRepository repository, LivroMapper mapper) {
+    public LivroServiceImpl(LivroRepository repository, LivroMapper mapper, LivroFilterRepository filterRepository) {
         this.repository = repository;
         this.mapper = mapper;
+        this.filterRepository = filterRepository;
     }
 
     @Override
@@ -66,5 +69,11 @@ public class LivroServiceImpl implements LivroService {
         }
 
         repository.deleteById(id);
+    }
+
+    public List<LivroDTO> filter(LivroDTO livroDTO) {
+        Livro livro = mapper.parseEntity(livroDTO);
+        List<Livro> livros = filterRepository.filter(livro);
+        return mapper.parseListDTO(livros);
     }
 }

@@ -18,13 +18,15 @@ public class Livro {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "isbn", nullable = false, unique = true)
+    @Column(name = "isbn", nullable = false, unique = true, length = 13)
     private String isbn;
     @JoinColumn(name = "categoria_livro_id", nullable = false)
-    @ManyToOne
+    //@ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne()
     private Categoria categoriaLivro;
     @JoinColumn(name = "editora_livro_id", nullable = false)
-    @ManyToOne
+    //@ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne()
     private Editora editoraLivro;
     @Column(name = "nome", nullable = false, unique = true)
     private String nome;
