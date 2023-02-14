@@ -67,13 +67,24 @@ public class LivroServiceImpl implements LivroService {
         if (!repository.existsById(id)) {
             throw new EntityNotFoundException();
         }
-
         repository.deleteById(id);
     }
 
     public List<LivroDTO> filter(LivroDTO livroDTO) {
         Livro livro = mapper.parseEntity(livroDTO);
         List<Livro> livros = filterRepository.filter(livro);
+        return mapper.parseListDTO(livros);
+    }
+
+    @Override
+    public List<LivroDTO> filterByIdCategory(Long id) {
+        List<Livro> livros = repository.findByIdCategory(id);
+        return mapper.parseListDTO(livros);
+    }
+
+    @Override
+    public List<LivroDTO> filterByIdPublisher(Long id) {
+        List<Livro> livros = repository.findByIdPublisher(id);
         return mapper.parseListDTO(livros);
     }
 }

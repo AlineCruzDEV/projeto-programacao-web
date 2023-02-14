@@ -1,15 +1,16 @@
 package com.linecruz.projetoprogramacaoweb.model.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-public record EditoraDTO(
-        Long id,
-        @NotBlank(message = "O campo nome é obrigatório") String nome,
-        String descricao
-) {
-    public EditoraDTO(String nome, String descricao) {
-        this(null, nome, descricao);
-    }
-
+@Data
+@NoArgsConstructor
+public class EditoraDTO {
+    private Long id;
+    @NotBlank(message = "O campo nome é obrigatório")
+    private String nome;
+    private String descricao;
 }
+
 
